@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SC_Bullet : MonoBehaviour
 {
+    [Header("Bullet options")]
     [SerializeField] public float bulletSpeed = 50f;
     [SerializeField] public GameObject fireEffect;
     private Transform target;

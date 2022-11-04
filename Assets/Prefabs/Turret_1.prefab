@@ -32,7 +32,7 @@ Transform:
   - {fileID: 401809302532370027}
   - {fileID: 4041388184769530812}
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1923119278502894090
 MonoBehaviour:
@@ -46,10 +46,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc61a6ca1532fe148aa2f156a353bed2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 0}
+  bulletPrefab: {fileID: 5823783103215781858, guid: 2b84fc1af8267c54d985396a8e813dc7, type: 3}
   target: {fileID: 0}
   partToRotate: {fileID: 4041388184769530812}
-  firePoint: {fileID: 0}
+  firePoint: {fileID: 7434486045062077635}
   enemyTag: Enemy
   range: 15
   turnSpeed: 6
