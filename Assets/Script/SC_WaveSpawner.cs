@@ -34,8 +34,10 @@ public class SC_WaveSpawner : MonoBehaviour
 
     IEnumerator SpawnWave()
     {
-        Debug.Log("Invocation d'une nouvelle vague de méchants");
+        //Debug.Log("Invocation d'une nouvelle vague de méchants");
         waveIndex++;
+        SC_PlayerStats.waves++;
+
         for (int i = 0; i < waveIndex; i++)
         {
             SpawnEnemy();

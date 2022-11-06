@@ -14,6 +14,12 @@ public class SC_CameraController : MonoBehaviour
 
     void Update()
     {
+        if(SC_GameManager.gameIsOver)
+        {
+            this.enabled = false;
+            return;
+        }
+
         if(Input.GetKeyDown(KeyCode.Escape))
         {
             canMove = !canMove;

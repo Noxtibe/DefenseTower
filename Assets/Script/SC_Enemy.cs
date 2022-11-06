@@ -7,6 +7,7 @@ public class SC_Enemy : MonoBehaviour
     [Header("Base Enemy options")]
     [SerializeField] float speed = 10f;
     [SerializeField] public int health = 100;
+    [SerializeField] public int lootMoney;
 
     private Transform target;
     private int waypointIndex = 0;
@@ -28,6 +29,7 @@ public class SC_Enemy : MonoBehaviour
 
     private void Die()
     {
+        SC_PlayerStats.money += lootMoney;
         Destroy(gameObject);
     }
 
