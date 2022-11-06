@@ -6,6 +6,7 @@ public class SC_Enemy : MonoBehaviour
 {
     [Header("Base Enemy options")]
     [SerializeField] float speed = 10f;
+    [SerializeField] public int health = 100;
 
     private Transform target;
     private int waypointIndex = 0;
@@ -13,6 +14,21 @@ public class SC_Enemy : MonoBehaviour
     void Start()
     {
         target = SC_Waypoints.points[0];
+    }
+
+    public void TakeDamage(int amount)
+    {
+        health -= amount;
+
+        if(health <= 0)
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        Destroy(gameObject);
     }
 
     void Update()
@@ -28,13 +44,18 @@ public class SC_Enemy : MonoBehaviour
 
     private void GetNextWaypoint()
     {
-        if(waypointIndex > SC_Waypoints.points.Length - 1)
+        if(waypointIndex >= SC_Waypoints.points.Length - 1)
         {
-            Destroy(gameObject);
-
+            EndPath();
             return;
         }
         waypointIndex++;
         target = SC_Waypoints.points[waypointIndex];
+    }
+
+    private void EndPath()
+    {
+        SC_PlayerStats.health--;
+        Destroy(gameObject);
     }
 }

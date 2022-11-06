@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 using UnityEngine;
 
 public class SC_Node : MonoBehaviour
@@ -7,8 +8,10 @@ public class SC_Node : MonoBehaviour
     [Header("Node options")]
     [SerializeField] public Vector3 yOffset;
     private Renderer render;
-    private GameObject turret;
+    public GameObject turret;
+    private SC_BuildSystem buildSystem;
     public Color hoverColor;
+    public Color notEnoughMoneyColor;
     private Color startColor;
 
 
@@ -16,10 +19,27 @@ public class SC_Node : MonoBehaviour
     {
         render = GetComponent<Renderer>();
         startColor = render.material.color;
+
+        buildSystem = SC_BuildSystem.instance;
+    }
+
+    public Vector3 GetBuildPosition()
+    {
+        return transform.position + yOffset;
     }
 
     private void OnMouseDown()
     {
+        if(EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
+
+        if(!buildSystem.canBuild)
+        {
+            return;
+        }
+
         if(turret != null)
         {
             Debug.Log("Impossible de placer une tourelle ici.");
@@ -27,13 +47,29 @@ public class SC_Node : MonoBehaviour
         }
 
         // Construction des tourelles
-        GameObject turretToBuild = SC_BuildSystem.instance.GetTurretToBuild();
-        turret = (GameObject)Instantiate(turretToBuild, transform.position + yOffset, transform.rotation);
+        buildSystem.BuildTurretOn(this);
     }
 
     private void OnMouseEnter()
     {
-        render.material.color = hoverColor;
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
+
+        if (!buildSystem.canBuild)
+        {
+            return;
+        }
+
+        if(buildSystem.hasMoney)
+        {
+            render.material.color = hoverColor;
+        }
+        else
+        {
+            render.material.color = notEnoughMoneyColor;
+        }
     }
 
     private void OnMouseExit()

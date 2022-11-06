@@ -15,7 +15,7 @@ public class SC_WaveSpawner : MonoBehaviour
     [TextArea] public string waveTextTip;
     //[InspectorTextArea] public string waveTip2;
     [SerializeField] private float timeBetweenWaves = 5f;
-    [SerializeField] private float timer = 2f;
+    [SerializeField] private float timer = 5f;
     [SerializeField] private int waveIndex = 0;
 
 
@@ -28,7 +28,8 @@ public class SC_WaveSpawner : MonoBehaviour
         }
 
         timer -= Time.deltaTime;
-        waveTimerText.text = Mathf.Round(timer).ToString(); // Round better to Floor, cause 30 fps unity, too fast for this
+        timer = Mathf.Clamp(timer, 0f, Mathf.Infinity); // Round better to Floor, cause 30 fps unity, too fast for this
+        waveTimerText.text = string.Format("{0:00.00}", timer);
     }
 
     IEnumerator SpawnWave()
