@@ -20,29 +20,40 @@ public class SC_BuildSystem : MonoBehaviour
 
     [SerializeField] public GameObject standardTurretPrefab;
     [SerializeField] public GameObject missileLauncherPrefab;
+    public SC_NodeUI nodeUI;
     private SC_TurretBlueprint turretToBuild;
+    private SC_Node selectedNode;
 
     public bool canBuild { get { return turretToBuild != null; } }
     public bool hasMoney { get { return SC_PlayerStats.money >= turretToBuild.cost; } }
 
-    public void BuildTurretOn(SC_Node node)
-    {
-        if(SC_PlayerStats.money < turretToBuild.cost)
-        {
-            Debug.Log("Pas assez d'argent pour cela");
-            return;
-        }
-
-        SC_PlayerStats.money -= turretToBuild.cost;
-
-        GameObject turret = (GameObject)Instantiate(turretToBuild.prefab, node.GetBuildPosition(), Quaternion.identity);
-        node.turret = turret;
-
-        Debug.Log("L'objet a été acheté, il vous reste: " + SC_PlayerStats.money);
-    }
-
     public void SelectTurretToBuild(SC_TurretBlueprint turret)
     {
         turretToBuild = turret;
+        DeselectNode();
+    }
+
+    public SC_TurretBlueprint GetTurretToBuild()
+    {
+        return turretToBuild;
+    }
+
+    public void SelectNode(SC_Node node)
+    {
+        if(node == selectedNode)
+        {
+            DeselectNode();
+            return;
+        }
+        selectedNode = node;
+        turretToBuild = null;
+
+        nodeUI.SetTarget(node);
+    }
+
+    public void DeselectNode()
+    {
+        selectedNode = null;
+        nodeUI.Hide();
     }
 }

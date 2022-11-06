@@ -2,13 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine;
+using TMPro;
+using UnityEditor.Experimental.GraphView;
 
 public class SC_Node : MonoBehaviour
 {
     [Header("Node options")]
     [SerializeField] public Vector3 yOffset;
     private Renderer render;
-    public GameObject turret;
+    [HideInInspector] public GameObject turret;
+    [HideInInspector] public SC_TurretBlueprint turretBlueprint;
+    [HideInInspector] public bool isUpgraded = false;
     private SC_BuildSystem buildSystem;
     public Color hoverColor;
     public Color notEnoughMoneyColor;
@@ -28,6 +32,45 @@ public class SC_Node : MonoBehaviour
         return transform.position + yOffset;
     }
 
+    public void UpgradeTurret()
+    {
+        if (SC_PlayerStats.money < turretBlueprint.upgradeCost)
+        {
+            Debug.Log("Pas assez d'argent pour améliorer la tourelle");
+            return;
+        }
+
+        SC_PlayerStats.money -= turretBlueprint.upgradeCost;
+        // Delete old turret
+        Destroy(turret);
+
+        //Create new upgraded turret
+        GameObject _turret = (GameObject)Instantiate(turretBlueprint.upgradedPrefab, GetBuildPosition(), Quaternion.identity);
+        turret = _turret;
+
+        isUpgraded = true;
+
+        Debug.Log("Tourelle améliorée");
+    }
+
+    private void BuildTurret(SC_TurretBlueprint blueprint)
+    {
+        if (SC_PlayerStats.money < blueprint.cost)
+        {
+            Debug.Log("Pas assez d'argent pour cela");
+            return;
+        }
+
+        SC_PlayerStats.money -= blueprint.cost;
+
+        turretBlueprint = blueprint;
+
+        GameObject _turret = (GameObject)Instantiate(blueprint.prefab, GetBuildPosition(), Quaternion.identity);
+        turret = _turret;
+
+        Debug.Log("La tourelle a été construite");
+    }
+
     private void OnMouseDown()
     {
         if(EventSystem.current.IsPointerOverGameObject())
@@ -35,19 +78,18 @@ public class SC_Node : MonoBehaviour
             return;
         }
 
-        if(!buildSystem.canBuild)
+        if (turret != null)
         {
+            buildSystem.SelectNode(this);
             return;
         }
 
-        if(turret != null)
+        if (!buildSystem.canBuild)
         {
-            Debug.Log("Impossible de placer une tourelle ici.");
             return;
         }
-
         // Construction des tourelles
-        buildSystem.BuildTurretOn(this);
+        BuildTurret(buildSystem.GetTurretToBuild());
     }
 
     private void OnMouseEnter()
