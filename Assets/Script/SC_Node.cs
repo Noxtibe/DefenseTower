@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine;
 using TMPro;
-using UnityEditor.Experimental.GraphView;
 
 public class SC_Node : MonoBehaviour
 {
